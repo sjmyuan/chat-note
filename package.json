@@ -1,0 +1,294 @@
+{
+  "name": "chat-note",
+  "productName": "Chat Note",
+  "version": "0.0.1",
+  "description": "Take note like chatting with youself",
+  "main": "dist/main/index.js",
+  "scripts": {
+    "start": "npm run build:main && npm run copy:resources && electron .",
+    "build:main": "tsc -b tsconfig-main.json",
+    "build:renderer": "next build --debug && next export -o dist/renderer/out",
+    "build": "npm run clean && yarn && npm run build:main && npm run build:renderer && npm run copy:resources",
+    "clean": "rm -rf dist/*",
+    "copy:resources": "cp -r resources dist",
+    "dist": "npm run build && electron-builder",
+    "pack": "electron-builder --dir",
+    "postinstall": "electron-builder install-app-deps",
+    "sentry-version": "echo \"$npm_package_name@$npm_package_version\"",
+    "lint": "cross-env NODE_ENV=development eslint . --cache --ext .js,.jsx,.ts,.tsx",
+    "lint-fix": "yarn --silent lint --fix; exit 0",
+    "lint-styles": "stylelint --ignore-path .eslintignore '**/*.*(css|scss)' --syntax scss",
+    "lint-styles-fix": "yarn --silent lint-styles --fix; exit 0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "cross-env NODE_ENV=development eslint --cache"
+    ],
+    "{*.json,.{babelrc,eslintrc,prettierrc,stylelintrc}}": [
+      "prettier --ignore-path .eslintignore --parser json --write"
+    ],
+    "*.{css,scss}": [
+      "stylelint --ignore-path .eslintignore --syntax scss --fix",
+      "prettier --ignore-path .eslintignore --single-quote --write"
+    ],
+    "*.{html,md,yml}": [
+      "prettier --ignore-path .eslintignore --single-quote --write"
+    ]
+  },
+  "build": {
+    "productName": "Sit",
+    "appId": "com.shangjiaming.sit",
+    "protocols": {
+      "name": "sit",
+      "schemes": [
+        "sit"
+      ]
+    },
+    "dmg": {
+      "icon": "dist/resources/icon.icns",
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "win": {
+      "icon": "dist/resources/icon.ico",
+      "target": [
+        "nsis",
+        "msi"
+      ]
+    },
+    "linux": {
+      "icon": "dist/resources/icon.png",
+      "target": [
+        "deb",
+        "rpm",
+        "AppImage"
+      ],
+      "category": "Development"
+    },
+    "directories": {
+      "output": "release",
+      "buildResources": "resources"
+    },
+    "asar": true,
+    "files": [
+      "dist/"
+    ],
+    "electronCompile": false,
+    "publish": {
+      "provider": "github",
+      "owner": "sjmyuan",
+      "repo": "chat-note",
+      "private": false
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sjmyuan/chat-note"
+  },
+  "author": {
+    "name": "Sjmyuan",
+    "email": "shangjiaming.yuan@gmail.com",
+    "url": "https://github.com/sjmyuan/chat-note"
+  },
+  "contributors": [
+    {
+      "name": "Sjmyuan",
+      "email": "shangjiaming.yuan@gmail.com",
+      "url": "https://github.com/sjmyuan"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sjmyuan/chat-note/issues"
+  },
+  "keywords": [
+    "electron",
+    "note",
+    "chat"
+  ],
+  "homepage": "https://github.com/sjmyuan/chat-note",
+  "jest": {
+    "testURL": "http://localhost/",
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/internals/mocks/fileMock.js",
+      "\\.(css|less|sass|scss)$": "identity-obj-proxy"
+    },
+    "moduleFileExtensions": [
+      "js",
+      "jsx",
+      "ts",
+      "tsx",
+      "json"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "app/node_modules"
+    ],
+    "setupFiles": [
+      "./internals/scripts/CheckBuildsExist.js"
+    ]
+  },
+  "devDependencies": {
+    "@next/eslint-plugin-next": "^12.0.8",
+    "@teamsupercell/typings-for-css-modules-loader": "^2.2.1",
+    "@types/enzyme": "^3.10.5",
+    "@types/enzyme-adapter-react-16": "^1.0.6",
+    "@types/history": "^4.7.7",
+    "@types/jest": "^26.0.10",
+    "@types/node": "12",
+    "@types/react": "^16.9.44",
+    "@types/react-dom": "^16.9.8",
+    "@types/react-grid-layout": "^1.1.1",
+    "@types/react-redux": "^7.1.9",
+    "@types/react-router": "^5.1.8",
+    "@types/react-router-dom": "^5.1.5",
+    "@types/react-test-renderer": "^16.9.3",
+    "@types/redux-logger": "^3.0.8",
+    "@types/uuid": "^8.3.0",
+    "@types/w3c-image-capture": "^1.0.2",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "browserslist-config-erb": "^0.0.1",
+    "chalk": "^4.1.0",
+    "concurrently": "^5.3.0",
+    "core-js": "^3.6.5",
+    "cross-env": "^7.0.2",
+    "css-loader": "^3.6.0",
+    "detect-port": "^1.3.0",
+    "electron": "^12",
+    "electron-builder": "^22.14.13",
+    "electron-devtools-installer": "^3.1.1",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.3",
+    "enzyme-to-json": "^3.5.0",
+    "eslint": "^7.0.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-config-airbnb-typescript": "^16.1.0",
+    "eslint-config-erb": "^4.0.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-import-resolver-webpack": "^0.12.2",
+    "eslint-plugin-compat": "^3.8.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-jest": "^23.18.0",
+    "eslint-plugin-jsx-a11y": "6.3.1",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.20.6",
+    "eslint-plugin-react-hooks": "^4.0.8",
+    "eslint-plugin-testcafe": "^0.2.1",
+    "file-loader": "^6.0.0",
+    "husky": "^4.2.5",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^27.5.1",
+    "lint-staged": "^10.2.11",
+    "mini-css-extract-plugin": "^0.9.0",
+    "next": "^12.1.1-canary.10",
+    "opencollective-postinstall": "^2.0.3",
+    "pnpapi": "^0.0.0",
+    "prettier": "^2.0.5",
+    "probe-image-size": "^6.0.0",
+    "react-test-renderer": "^16.12.0",
+    "redux-logger": "^3.0.6",
+    "rimraf": "^3.0.0",
+    "sass-loader": "^9.0.3",
+    "style-loader": "^1.2.1",
+    "stylelint": "^13.6.1",
+    "stylelint-config-prettier": "^8.0.2",
+    "stylelint-config-standard": "^20.0.0",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.6.2",
+    "url-loader": "^4.1.0"
+  },
+  "dependencies": {
+    "@emotion/css": "^11.7.1",
+    "@emotion/react": "^11.8.2",
+    "@emotion/styled": "^11.8.1",
+    "@fortawesome/fontawesome-free": "^5.14.0",
+    "@hot-loader/react-dom": "^16.13.0",
+    "@mui/icons-material": "^5.5.0",
+    "@mui/material": "^5.5.0",
+    "@mui/system": "^5.5.0",
+    "@reduxjs/toolkit": "^1.4.0",
+    "@types/mousetrap": "^1.6.6",
+    "aws-sdk": "^2.1092.0",
+    "connected-react-router": "^6.9.2",
+    "dexie": "~3.0.3",
+    "electron-debug": "^3.1.0",
+    "electron-log": "^4.2.4",
+    "electron-next": "^3.1.5",
+    "electron-updater": "^4.6.5",
+    "electron-util": "^0.14.2",
+    "fp-ts": "^2.8.6",
+    "fp-ts-contrib": "^0.1.21",
+    "history": "^4.7.2",
+    "io-ts": "^2.2.13",
+    "jimp": "^0.16.1",
+    "konva": "^7.2.5",
+    "mousetrap": "^1.6.5",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-grid-layout": "^1.1.1",
+    "react-hot-loader": "^4.12.21",
+    "react-infinite-scroll-component": "^6.1.0",
+    "react-konva": "^17.0.2-5",
+    "react-redux": "^7.2.1",
+    "react-router-dom": "^5.2.0",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0",
+    "regenerator-runtime": "^0.13.5",
+    "source-map-support": "^0.5.19",
+    "styled-components": "^5.2.1",
+    "unstated-next": "^1.1.0",
+    "use-deep-compare-effect": "^1.6.1",
+    "uuid": "^8.3.2"
+  },
+  "devEngines": {
+    "node": ">=7.x",
+    "npm": ">=4.x",
+    "yarn": ">=0.21.3"
+  },
+  "browserslist": [],
+  "prettier": {
+    "overrides": [
+      {
+        "files": [
+          ".prettierrc",
+          ".babelrc",
+          ".eslintrc",
+          ".stylelintrc"
+        ],
+        "options": {
+          "parser": "json"
+        }
+      }
+    ],
+    "singleQuote": true
+  },
+  "stylelint": {
+    "extends": [
+      "stylelint-config-standard",
+      "stylelint-config-prettier"
+    ]
+  },
+  "renovate": {
+    "extends": [
+      "bliss"
+    ],
+    "baseBranches": [
+      "next"
+    ]
+  },
+  "husky": {
+    "hooks": {}
+  }
+}
